@@ -46,16 +46,16 @@ export async function POST(request: NextRequest) {
 
     console.log(`Processing async payload [${event}] for specific targets -> Type: ${contentType} | Slug: ${slug}`);
 
-    // 2. Clear Global Wrapper Cache Tags (Fixed: Added required second argument)
-    revalidateTag("wordpress");
+    // 2. Clear Global Wrapper Cache Tags (Fixed for Next.js 16)
+    revalidateTag("wordpress", {});
 
     // 3. Isolated Target Invalidation Logic
     if (contentType === "post") {
-      revalidateTag("posts");
-      revalidateTag("posts-page-1"); // Wipe just primary post feed references
+      revalidateTag("posts", {});
+      revalidateTag("posts-page-1", {}); // Wipe just primary post feed references
       
       if (contentId) {
-        revalidateTag(`post-${contentId}`);
+        revalidateTag(`post-${contentId}`, {});
       }
       
       // Clear ONLY this single post profile path
@@ -64,10 +64,10 @@ export async function POST(request: NextRequest) {
       }
 
     } else if (contentType === "page") {
-      revalidateTag("pages");
+      revalidateTag("pages", {});
       
       if (contentId) {
-        revalidateTag(`page-${contentId}`);
+        revalidateTag(`page-${contentId}`, {});
       }
       
       // Clear ONLY this single standalone page path
@@ -77,14 +77,14 @@ export async function POST(request: NextRequest) {
 
     } else if (contentType === "taxonomy") {
       // Handles localized adjustments to categories or post tags
-      revalidateTag("categories");
-      revalidateTag("tags");
+      revalidateTag("categories", {});
+      revalidateTag("tags", {});
 
       if (contentId) {
-        revalidateTag(`posts-category-${contentId}`);
-        revalidateTag(`category-${contentId}`);
-        revalidateTag(`posts-tag-${contentId}`);
-        revalidateTag(`tag-${contentId}`);
+        revalidateTag(`posts-category-${contentId}`, {});
+        revalidateTag(`category-${contentId}`, {});
+        revalidateTag(`posts-tag-${contentId}`, {});
+        revalidateTag(`tag-${contentId}`, {});
       }
       
       // Refresh the specific post file containing changed taxonomies
