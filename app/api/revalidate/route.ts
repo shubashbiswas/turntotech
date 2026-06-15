@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`Processing async payload [${event}] for specific targets -> Type: ${contentType} | Slug: ${slug}`);
 
-    // 2. Clear Global Wrapper Cache Tags (menus, global lookups)
+    // 2. Clear Global Wrapper Cache Tags (Fixed: Added required second argument)
     revalidateTag("wordpress");
 
     // 3. Isolated Target Invalidation Logic
